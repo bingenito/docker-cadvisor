@@ -1,21 +1,19 @@
 FROM hypriot/rpi-alpine:latest
 MAINTAINER Mike Morris
 
-ENV GLIBC_VERSION "2.23-r3"
+ENV GLIBC_VERSION "2.22-r8"
 
-RUN apk --no-cache add ca-certificates wget device-mapper && \
-    apk --no-cache add thin-provisioning-tools --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ && \
-    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-glibc/master/sgerrand.rsa.pub && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
-    wget https://github.com/andyshinn/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk && \
-    apk add glibc-${GLIBC_VERSION}.apk glibc-bin-${GLIBC_VERSION}.apk && \
+RUN apk --no-cache add --update ca-certificates wget device-mapper
+RUN apk --no-cache add zfs-zsh-completion --repository http://dl-3.alpinelinux.org/alpine/edge/main/
+
+RUN wget https://github.com/armhf-docker-library/alpine-pkg-glibc/releases/download/2.22/glibc-${GLIBC_VERSION}.apk && \
+    wget https://github.com/armhf-docker-library/alpine-pkg-glibc/releases/download/2.22/glibc-bin-${GLIBC_VERSION}.apk && \
+    apk add glibc-${GLIBC_VERSION}.apk glibc-bin-${GLIBC_VERSION}.apk --allow-untrusted && \
     /usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib && \
     echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* /glibc*.apk
 
 COPY cadvisor /usr/bin/cadvisor
 
 EXPOSE 8080
 ENTRYPOINT ["/usr/bin/cadvisor", "-logtostderr"]
-
-#    apk --no-cache add zfs --repository http://dl-3.alpinelinux.org/alpine/edge/main/ && \
