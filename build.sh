@@ -2,15 +2,18 @@
 
 REPO_DIR=$PWD
 BUILD_PATH='github.com/google/cadvisor'
+CADVISOR_VERSION="v0.24.1"
 
 export GOPATH=$REPO_DIR/go
+mkdir -p $GOPATH
 
 go get -d $BUILD_PATH
 
 cd $GOPATH/src/$BUILD_PATH
+git checkout $CADVISOR_VERSION
 make build
 
 cp cadvisor $REPO_DIR
 cd $REPO_DIR
 
-docker build -t armhf-cadvisor:latest -t armhf-cadvisor:$(date +%Y%m%d) .
+docker build -t armhf-cadvisor:latest -t armhf-cadvisor:$(echo $CADVISOR_VERSION | tr -d '[:alpha:]') .
