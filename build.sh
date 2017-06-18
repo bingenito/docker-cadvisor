@@ -2,12 +2,12 @@
 
 REPO_DIR=$PWD
 BUILD_PATH='github.com/google/cadvisor'
-CADVISOR_VERSION="v0.24.1"
+CADVISOR_VERSION="v0.25.0"
 
 export GOPATH=$REPO_DIR/go
 mkdir -p $GOPATH $REPO_DIR/docker
 
-go get -d $BUILD_PATH
+go get -d -u $BUILD_PATH
 
 cd $GOPATH/src/$BUILD_PATH
 git checkout $CADVISOR_VERSION
