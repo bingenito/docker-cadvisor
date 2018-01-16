@@ -2,7 +2,7 @@
 
 REPO_DIR=$PWD
 BUILD_PATH='github.com/google/cadvisor'
-CADVISOR_VERSION="v0.26.1"
+CADVISOR_VERSION="v0.27.4"
 
 export GOPATH=$REPO_DIR/go
 mkdir -p $GOPATH $REPO_DIR/docker
